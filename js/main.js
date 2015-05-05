@@ -89,7 +89,7 @@ function clickWire(){
 }
 
 function clickCircuit(){
-    if (silicon >= circuitSiliconCost && wire >= circuitWireCost){
+    if (silicon >= (Math.round((circuitSiliconCost-0.1)*100)/100) && wire >= (Math.round((circuitWireCost-0.1)*100)/100)){
         circuit += clickCircuitStr;
         silicon -= clickCircuitStr;
         wire -= (circuitWireCost * clickCircuitStr)
