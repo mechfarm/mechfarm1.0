@@ -1,0 +1,139 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <title>Mech Farm</title>
+    </head>
+    
+    <body>
+        <div class="nav"> <!-- DEBUG BAR -->
+            <button class="hideNav">Hide Debug Bar</button>
+            <ul>
+                <li>Current clock time: <span id="clock">1000</span></li>
+                <li>Amount: <input type="number" id='clockModVal' value="100"></li>
+                <li><button onclick="clockModify(0)">Increase Clock Time</button></li>
+                <li><button onclick="clockModify(1)">Decrease Clock Time</button></li>
+            </ul>
+            <ul>
+                <li>Copper: <span id="copper_Debug">0</span></li>
+                <li>Amount: <input type="number" id='copperModVal' value="10000"></li>
+                <li><button onclick="copperModify(0)">Increase Copper</button></li>
+                <li><button onclick="copperModify(1)">Decrease Copper</button></li>
+            </ul>
+            <ul>
+                <li>Silicon: <span id="silicon_Debug">0</span></li>
+                <li>Amount: <input type="number" id='siliconModVal' value="10000"></li>
+                <li><button onclick="siliconModify(0)">Increase Silicon</button></li>
+                <li><button onclick="siliconModify(1)">Decrease Silicon</button></li>
+            </ul>
+            <ul>
+                <li>Wire: <span id="wire_Debug">0</span></li>
+                <li>Amount: <input type="number" id='wireModVal' value="10000"></li>
+                <li><button onclick="wireModify(0)">Increase Wire</button></li>
+                <li><button onclick="wireModify(1)">Decrease Wire</button></li>
+            </ul>
+            <ul>
+                <li>Circuit: <span id="circuit_Debug">0</span></li>
+                <li>Amount: <input type="number" id='circuitModVal' value="10000"></li>
+                <li><button onclick="circuitModify(0)">Increase Circuit</button></li>
+                <li><button onclick="circuitModify(1)">Decrease Circuit</button></li>
+            </ul>
+        </div> <!-- DEBUG BAR -->
+        
+        <button class="showNav">Show Debug Bar</button>
+        <button onclick="deleteSave()" class="resetGame">Reset Game</button>
+        <button onclick="load()">Load Game</button>
+        <button onclick="save()">Save Game</button> Time passed since last save: <span id="saveCountdown">0</span>s
+        
+        <div class="container">
+            <div class="header">
+                <h1>Mech Farm</h1>
+            </div>
+
+            <div class="stats">
+                <h1>Stats</h1>
+                <div id="oreStat">
+                    Ores mined:
+                    <ul>
+                        <li><button onclick="clickCopper()">Mine</button> Copper: <span id="copper">5</span> (<span id="copperPS">0</span>/s) 
+                        <br><span id="copperFlav">You are gonna need this</span></li>
+                        <li><button onclick="clickSilicon()">Mine</button> Silicon: <span id="silicon">0</span> (<span id="siliconPS">0</span>/s)
+                        <br><span id="siliconFlav">For the more advanced stuff</span></li>
+                    </ul>
+                    Miners:
+                    <ul>
+                        <li>Minebots: <span class="minebot">0</span> (<span id="minebotTot">0</span>/s)</li>
+                    </ul>
+                </div>
+                <div id="refineStat">
+                    Materials:
+                    <ul>
+                        <li><button onclick="clickWire()">Craft</button> Wire: <span id="wire">0</span> (<span id="wirePS">0</span>/s)
+                            <br><span id="wireFlav"> Wire&#40;1&#41; comes from copper&#40;<span id="wireCopperCost">1</span>&#41;</span></li>
+                        <li><button onclick="clickCircuit()">Craft</button> Circuits: <span id="circuit">0</span> (<span id="circuitPS">0</span>/s)
+                            <br><span id="circuitFlav"> Circuit&#40;1&#41; comes from silicon&#40;1&#41; and wire&#40;5&#41;</span></li>
+                    </ul>
+                    Workers:
+                    <ul>
+                        <li>Wirebot: <span id="wirebot">0</span> (<span id="wirebotTot">0</span>/s)</li>
+                    </ul>
+                </div>
+                <div id="buildStat">
+                    Mechs:
+                    <ul>
+                        <li><strong>Driller <span class="drillerMK"></span></strong></li>
+                        <li>Strenght: <span id="drillerStr">0</span></li>
+                    </ul>
+                    <ul>
+                        <li><strong>Volt <span class="voltMK"></span></strong></li>
+                        <li>Strenght: <span id="voltStr">0</span></li>
+                    </ul>
+                </div>
+            </div> <!-- STATS -->
+            
+            <div class="shop"> 
+                <div id="ore">
+                    <p>For all your ore needs &#126;</p>
+                    <ul>
+                        <li><button onclick="buyMinebot(1)">Build</button><button onclick="sellMinebot(1)">Destroy</button> <a href="#">Minebot</a>
+                        x<span class="minebot">0</span>
+                        <br>Cost: <span id="minebotCost">5</span> wire
+                        <br><span id="minebotFlav">It mines copper and it loves you &lt;3</span></li>
+                        
+                        <li><a href="#">Option 2</a></li>
+                    </ul>
+                </div> <!-- ORE -->
+                <div id="refine">
+                    <p>Need materials? Got workers &#126;</p>
+                    <ul>
+                        <li><button onclick="buyWirebot(1)">Build</button><button onclick="sellWirebot(1)">Destroy</button> <a href="#">Wirebot</a>
+                        <br>Cost: <span id="wirebotCost">10</span> copper
+                        <br><span id="wirebotFlav">It's life is dedicated to wire crafting</span></li>
+                        
+                        <li><button onclick="#">Build</button><button onclick="#">Destroy</button> <a href="#">Assembler MK&#45;1</a>
+                        <br>Cost: <span id="#">20</span> wire
+                        <br><span id="assmk1Flav">A more advanced bot</span></li>
+                    </ul>
+                </div> <!-- REFINE -->
+                <div id="build">
+                    <p>Mechs make everything easier &#126;</p>
+                    <ul>
+                        <li><button onclick="buyDriller(1)" id="buyDriller">Build</button> <a href="#">Driller <span class="drillerMK"></span></a>
+                        <br>Cost: <span id="drillerWireCost">100</span> wire, <span id="drillerCircuitCost">50</span> circuit
+                        <br><span id="drillerFlav">A mech specialized in mining</span></li>
+                        
+                        <li><button onclick="buyVolt(1)" id="buyVolt">Build</button> <a href="#">Volt <span class="voltMK"></span></a>
+                        <br>Cost: <span id="voltWireCost">50</span> wire, <span id="voltCircuitCost">100</span> circuit
+                        <br><span id="voltFlav">Electrifying!</span></li>
+                    </ul>
+                </div> <!-- BUILD -->
+            </div> <!-- SHOP -->
+            <div class="footer">
+                <p>Oh what a footer ya got here.</p>
+            </div> <!-- FOOTER -->
+        </div> <!-- CONTAINER -->
+        
+        <script src="js/jquery.min.js"></script> 
+        <script src="js/hideNav.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
